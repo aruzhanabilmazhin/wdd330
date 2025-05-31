@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>WDD330 Home</title>
+  <title>Newsletter Subscription</title>
   <style>
     body {
       font-family: Arial, sans-serif;
@@ -11,20 +11,12 @@
       background: #f9f9f9;
       color: #333;
     }
-    a {
-      color: #007acc;
-      text-decoration: none;
-    }
-    a:hover {
-      text-decoration: underline;
-    }
     form {
       max-width: 400px;
       background: white;
       padding: 1.5rem;
       border-radius: 5px;
       box-shadow: 0 0 10px #ccc;
-      margin-top: 2rem;
     }
     label, input, button {
       display: block;
@@ -57,10 +49,7 @@
   </style>
 </head>
 <body>
-  <h1>Welcome to WDD330</h1>
-  <p><a href="contact.html">Go to Contact Page</a></p>
-
-  <h2>Subscribe to our Newsletter</h2>
+  <h1>Subscribe to our Newsletter</h1>
   <form id="newsletter-form">
     <label for="email">Email address:</label>
     <input type="email" id="email" name="email" required placeholder="your.email@example.com" />
@@ -77,6 +66,7 @@
       const email = form.email.value.trim();
 
       if (email) {
+        // Here you would normally send the email to a backend or API
         message.textContent = `Thank you for subscribing, ${email}!`;
         form.reset();
       } else {
