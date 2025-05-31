@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Scroll to Top Demo</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      height: 2000px; /* for scrolling */
+      padding: 2rem;
+      background: #f0f0f0;
+    }
+
+    a {
+      color: #007acc;
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    #scrollToTopBtn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      display: none;
+      background-color: #007acc;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      padding: 12px 18px;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    #scrollToTopBtn:hover {
+      background-color: #005fa3;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Scroll to Top Demo Page</h1>
+  <p><a href="index.html">← Back to Home</a></p>
+  <p>Scroll down the page to see the button appear...</p>
+
+  <!-- Scroll to Top Button -->
+  <button id="scrollToTopBtn" title="Go to top">↑</button>
+
+  <script>
+    const scrollBtn = document.getElementById("scrollToTopBtn");
+
+    window.addEventListener("scroll", () => {
+      scrollBtn.style.display = window.pageYOffset > 300 ? "block" : "none";
+    });
+
+    scrollBtn.addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+  </script>
+</body>
+</html>
