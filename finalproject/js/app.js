@@ -12,20 +12,17 @@ if (welcomeMsg) {
     } else {
       const diff = now - Number(lastVisit);
       const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-      if (days === 0) {
-        welcomeMsg.textContent = "Back so soon! Awesome!";
-      } else if (days === 1) {
-        welcomeMsg.textContent = "You last visited 1 day ago.";
-      } else {
-        welcomeMsg.textContent = `You last visited ${days} days ago.`;
-      }
+      welcomeMsg.textContent =
+        days === 0
+          ? "Back so soon! Awesome!"
+          : `You last visited ${days} day${days > 1 ? "s" : ""} ago.`;
     }
     localStorage.setItem('lastVisit', now.toString());
   }
   showVisitMessage();
 }
 
-// -- FETCH BOOKS FROM OPEN LIBRARY API (index.html only) --
+// -- FETCH BOOKS FROM OPEN LIBRARY API --
 const booksContainer = document.getElementById('books-container');
 if (booksContainer) {
   async function fetchBooks() {
@@ -46,8 +43,12 @@ if (booksContainer) {
     books.forEach(book => {
       const card = document.createElement('article');
       card.className = 'card';
+      const cover = book.cover_i
+        ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
+        : 'https://via.placeholder.com/150x220?text=No+Cover';
+
       card.innerHTML = `
-        <img src="https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg" alt="Cover of ${book.title}" />
+        <img src="${cover}" alt="Cover of ${book.title}" />
         <div class="card-content">
           <h3>${book.title}</h3>
           <p>Author: ${book.author_name ? book.author_name[0] : 'Unknown'}</p>
@@ -61,41 +62,50 @@ if (booksContainer) {
   fetchBooks();
 }
 
-// -- FETCH CITY DATA FROM TELEPORT API (cityguide.html only) --
+// -- FETCH CITY DATA FROM TELEPORT API --
 const cityInfoContainer = document.getElementById('city-info-container');
 if (cityInfoContainer) {
   async function fetchCityInfo() {
     try {
       const response = await fetch('https://api.teleport.org/api/urban_areas/');
       const data = await response.json();
-      const urbanAreas = data._links['ua:item'].slice(0, 6); // limit to 6 cities
+      const urbanAreas = data._links['ua:item'].slice(0, 6); // Limit to 6 cities
 
-      const cityPromises = urbanAreas.map(area =>
-        fetch(area.href + 'scores/').then(res => res.json())
-      );
+      const cityPromises = urbanAreas.map(async (area) => {
+        const [scoreRes, imageRes] = await Promise.all([
+          fetch(area.href + 'scores/'),
+          fetch(area.href + 'images/')
+        ]);
+        const scoreData = await scoreRes.json();
+        const imageData = await imageRes.json();
+
+        return {
+          name: area.name,
+          summary: scoreData.summary || 'No description available.',
+          url: area.href,
+          image: imageData.photos?.[0]?.image?.web || 'https://via.placeholder.com/300x160?text=City'
+        };
+      });
+
       const cityData = await Promise.all(cityPromises);
-      displayCityInfo(cityData, urbanAreas);
+      displayCityInfo(cityData);
     } catch (error) {
       cityInfoContainer.textContent = 'Failed to load city info.';
       console.error(error);
     }
   }
 
-  function displayCityInfo(cityData, urbanAreas) {
+  function displayCityInfo(cityData) {
     cityInfoContainer.innerHTML = '';
-    cityData.forEach((data, i) => {
-      const cityName = urbanAreas[i].name;
-      const summary = data.summary || 'No description available.';
-      const image = data.teleport_city_score_image || 'https://via.placeholder.com/300x160?text=City';
-
+    cityData.forEach((city) => {
       const card = document.createElement('article');
       card.className = 'card';
       card.innerHTML = `
-        <img src="${image}" alt="Image of ${cityName}" />
+        <img src="${city.image}" alt="Image of ${city.name}" />
         <div class="card-content">
-          <h3>${cityName}</h3>
-          <p>${summary.replace(/<[^>]*>?/gm, '').slice(0, 150)}...</p>
-          <button class="learn-more" onclick="window.open('${urbanAreas[i].href}', '_blank')">Learn More</button>
+          <h3>${city.name}</h3>
+          <p>${city.summary.replace(/<[^>]*>?/gm, '').slice(0, 150)}...</p>
+          <button class="learn-more" onclick="window.open('${city.url}', '_blank')">Learn More</button>
         </div>
       `;
       cityInfoContainer.appendChild(card);
@@ -104,5 +114,3 @@ if (cityInfoContainer) {
 
   fetchCityInfo();
 }
-
-// -- No specific JS needed for contact.html at the moment
