@@ -9,6 +9,7 @@ body {
     padding: 0;
     background: #f0f2f5;
     color: #333;
+    line-height: 1.6;
 }
 
 /* Header and Navigation */
@@ -24,13 +25,17 @@ header h1 {
     font-size: 2rem;
 }
 
+nav {
+    margin-top: 0.5rem;
+}
+
 nav ul {
     list-style: none;
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     padding: 0;
-    margin: 0.5rem 0 0;
+    margin: 0;
 }
 
 nav a {
@@ -73,10 +78,12 @@ nav a:hover {
 }
 
 /* Section Headings */
-section h3 {
+section h3,
+section h2 {
     color: #004d99;
     margin-bottom: 1rem;
     font-size: 1.5rem;
+    text-align: center;
 }
 
 /* Highlights Section */
@@ -144,7 +151,8 @@ footer {
         font-size: 1.8rem;
     }
 
-    section h3 {
+    section h3,
+    section h2 {
         font-size: 1.3rem;
     }
 
@@ -152,6 +160,7 @@ footer {
         grid-template-columns: 1fr;
     }
 }
+
 /* Book Cards Grid Layout */
 .card-grid {
     display: grid;
@@ -190,4 +199,33 @@ footer {
 .card-content p {
     font-size: 0.9rem;
     color: #666;
+}
+
+/* Book Details Page */
+#book-container {
+    max-width: 700px;
+    margin: 2rem auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+#book-container h2 {
+    color: #004d99;
+    margin-bottom: 1rem;
+}
+
+#book-container p {
+    margin: 1rem 0;
+    color: #444;
+    font-size: 1rem;
+}
+
+#book-container img {
+    max-width: 300px;
+    height: auto;
+    border-radius: 6px;
+    margin-top: 1rem;
 }

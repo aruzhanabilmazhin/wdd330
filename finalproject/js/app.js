@@ -47,12 +47,15 @@ if (booksContainer) {
         ? `https://covers.openlibrary.org/b/id/${book.cover_i}-M.jpg`
         : 'https://via.placeholder.com/150x220?text=No+Cover';
 
+      // Change: link to your own bookdetails.html with work ID
+      const workKey = book.key.startsWith('/works/') ? book.key : `/works/${book.key}`;
+
       card.innerHTML = `
         <img src="${cover}" alt="Cover of ${book.title}" />
         <div class="card-content">
           <h3>${book.title}</h3>
           <p>Author: ${book.author_name ? book.author_name[0] : 'Unknown'}</p>
-          <button class="learn-more" onclick="window.open('https://openlibrary.org${book.key}', '_blank')">Learn More</button>
+          <a class="learn-more" href="bookdetails.html?work=${workKey}">Learn More</a>
         </div>
       `;
       booksContainer.appendChild(card);
